@@ -309,7 +309,7 @@ export default function App() {
                         🌃 Game Overview
                       </h3>
                       <p className="text-gray-300 text-sm lg:text-base leading-relaxed mb-4">
-                      Welcome to the adrenaline-filled world of Parking Fury 3D, where you&apos;ll be at the wheel of various vehicles navigating the bustling streets of a massive city. Whether you're behind the wheel of a taxi or driving an ambulance through traffic to save lives, each mission presents its own challenges and rewards. For those who dare, there is the exciting world of car theft missions. Take on the role of a skilled driver tasked with procuring specific vehicles under the cover of darkness.
+                      Welcome to the adrenaline-filled world of Parking Fury 3D, where you&apos;ll be at the wheel of various vehicles navigating the bustling streets of a massive city. Whether you&apos;re behind the wheel of a taxi or driving an ambulance through traffic to save lives, each mission presents its own challenges and rewards. For those who dare, there is the exciting world of car theft missions. Take on the role of a skilled driver tasked with procuring specific vehicles under the cover of darkness.
                       </p>
                     
                     </div>
@@ -375,7 +375,7 @@ export default function App() {
                         <h4 className="text-yellow-300 font-semibold mb-2">💡 Pro Tips:</h4>
                         <ul className="text-gray-300 text-sm space-y-1">
                           <li>• Use neon street lights as parking guides</li>
-                          <li>• Practice makes perfect - don't rush the first attempts</li>
+                          <li>• Practice makes perfect - don&apos;t rush the first attempts</li>
                           <li>• Watch for pedestrians and moving traffic</li>
                           <li>• Different vehicles have different turning radiuses</li>
                         </ul>
