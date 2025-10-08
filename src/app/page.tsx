@@ -229,13 +229,12 @@ export default function App() {
               >
                 🎮 Play Now!
               </Button>
-              <Button 
-                onClick={showRules}
-                variant="outline"
-                className="border-blue-400 text-blue-300 hover:bg-blue-500/10 px-4 lg:px-6 py-3 lg:py-4 text-base lg:text-lg w-full sm:w-auto touch-target"
+              <Link 
+                href="#game-rules"
+                className="bg-gradient-to-r from-blue-500 to-purple-500 border-blue-400 text-blue-300 hover:bg-blue-500/10 px-4 lg:px-6 py-3 lg:py-4 text-base lg:text-lg w-full sm:w-auto touch-target"
               >
                 📋 Game Rules
-              </Button>
+              </Link>
             </div>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-2 mt-6 lg:mt-8">
@@ -270,7 +269,7 @@ export default function App() {
                   )}
                   <iframe
                     id="game-iframe"
-                    src="https://html5.gamedistribution.com/13d99dac275842e1a64a13332962fbd1/?gd_sdk_referrer_url=https://parkingfury3d.win"
+                    src="https://html5.gamedistribution.com/13d99dac275842e1a64a13332962fbd1/?gd_sdk_referrer_url=https://www.parkingfury3d.win"
                     width="100%"
                     height="400"
                     className="border-0 lg:h-[600px]"
@@ -346,7 +345,7 @@ export default function App() {
                     </div>
 
                     {/* Controls & Tips - Mobile Optimized */}
-                    <div className="bg-gradient-to-r from-yellow-900/30 to-orange-900/30 rounded-lg p-4 lg:p-6 border border-yellow-500/20">
+                    <div className="bg-gradient-to-r from-yellow-900/30 to-orange-900/30 rounded-lg p-4 lg:p-6 border border-yellow-500/20" id="game-rules">
                       <h3 className="text-lg lg:text-xl text-yellow-200 mb-3 flex items-center gap-2">
                         🕹️ Controls & Pro Tips
                       </h3>
@@ -358,7 +357,9 @@ export default function App() {
                             <li><span className="text-yellow-400">S/↓:</span> Reverse/Brake</li>
                             <li><span className="text-yellow-400">A/←:</span> Turn left</li>
                             <li><span className="text-yellow-400">D/→:</span> Turn right</li>
-                            <li><span className="text-yellow-400">Space:</span> Handbrake</li>
+                            <li><span className="text-yellow-400">C:</span> Switch Camera</li>
+                            <li><span className="text-yellow-400">Space:</span> Brake</li>
+                            <li><span className="text-yellow-400">Shift:</span> Enter Car</li>
                           </ul>
                         </div>
                         <div>
@@ -474,19 +475,7 @@ export default function App() {
                 </div>
               </Card>
 
-              {/* Tips */}
-              <Card className="bg-gray-800/50 border-yellow-500/30 backdrop-blur-sm">
-                <div className="p-4 lg:p-6">
-                  <h3 className="flex items-center gap-2 text-yellow-200 mb-3 lg:mb-4 text-sm lg:text-base">
-                    <Lightbulb className="w-4 h-4 lg:w-5 lg:h-5" />
-                    Beginner Tips
-                  </h3>
-                  <div className="space-y-2 text-xs lg:text-sm text-gray-300">
-                    <p><strong>Controls:</strong> Use W/A/S/D to drive, spacebar to park</p>
-                    <p><strong>Safety:</strong> Press CRTL to enter cars. </p>
-                  </div>
-                </div>
-              </Card>
+          
 
             </div>
           </div>
