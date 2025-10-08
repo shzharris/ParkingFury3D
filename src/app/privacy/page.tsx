@@ -1,3 +1,4 @@
+import Link from "next/link";
 export default function PrivacyPolicyPage() {
   return (
     <div className="min-h-screen bg-gray-900 text-white">
@@ -16,18 +17,8 @@ export default function PrivacyPolicyPage() {
               <span className="sm:hidden">Parking Fury 3D</span>
             </h1>
             <nav className="flex space-x-3 lg:space-x-6">
-              <a
-                href="/"
-                className="text-blue-300 hover:text-blue-100 transition-colors text-sm lg:text-base touch-target"
-              >
-                Home
-              </a>
-              <a
-                href="/#game-iframe"
-                className="text-blue-300 hover:text-blue-100 transition-colors text-sm lg:text-base touch-target"
-              >
-                Game
-              </a>
+              <Link href="/" className="text-blue-300 hover:text-blue-100 transition-colors text-sm lg:text-base touch-target">Home</Link>
+              <Link href="/#game-iframe" className="text-blue-300 hover:text-blue-100 transition-colors text-sm lg:text-base touch-target">Game</Link>
             </nav>
           </div>
         </div>
@@ -40,9 +31,9 @@ export default function PrivacyPolicyPage() {
 
         <section className="space-y-4">
           <p>
-            This Privacy Policy describes how Black Flame Digital Service Company ("we",
-            "us", or "our") handles information in connection with the website
-            parkingfury3d.win (the "Site").
+            This Privacy Policy describes how Black Flame Digital Service Company (&quot;we&quot;,
+              &quot;us&quot;, or &quot;our&quot;) handles information in connection with the website
+            parkingfury3d.win (the &quot;Site&quot;).
           </p>
 
           <h2 className="text-xl font-semibold mt-6">1. Information We Collect</h2>
@@ -101,9 +92,9 @@ export default function PrivacyPolicyPage() {
               <p className="text-gray-400 text-xs lg:text-sm">© 2025 Black Flame Digital Service Company LLC. Game copyright belongs to third parties.</p>
             </div>
             <div className="flex flex-wrap justify-center gap-3 lg:gap-6">
-              <a href="/privacy" className="text-blue-300 hover:text-blue-100 transition-colors text-xs lg:text-sm touch-target">Privacy Policy</a>
+              <Link href="/privacy" className="text-blue-300 hover:text-blue-100 transition-colors text-xs lg:text-sm touch-target">Privacy Policy</Link>
               <a href="https://gamedistribution.com/" target='_blank' className="text-blue-300 hover:text-blue-100 transition-colors text-xs lg:text-sm touch-target">Partnership</a>
-              <a href="#contact" className="text-blue-300 hover:text-blue-100 transition-colors text-xs lg:text-sm touch-target">Contact Us</a>
+              <Link href="#contact" className="text-blue-300 hover:text-blue-100 transition-colors text-xs lg:text-sm touch-target">Contact Us</Link>
             </div>
           </div>
         </div>

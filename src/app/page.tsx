@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { supabase } from '@/lib/supabaseClient';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
@@ -170,8 +171,8 @@ export default function App() {
               <span className="sm:hidden">Parking Fury 3D</span>
             </h1>
             <nav className="flex space-x-3 lg:space-x-6">
-              <a href="#home" className="text-blue-300 hover:text-blue-100 transition-colors text-sm lg:text-base touch-target">Home</a>
-              <a href="#game-iframe" className="text-blue-300 hover:text-blue-100 transition-colors text-sm lg:text-base touch-target">Game</a>
+              <Link href="#home" className="text-blue-300 hover:text-blue-100 transition-colors text-sm lg:text-base touch-target">Home</Link>
+              <Link href="#game-iframe" className="text-blue-300 hover:text-blue-100 transition-colors text-sm lg:text-base touch-target">Game</Link>
             </nav>
           </div>
         </div>
@@ -501,9 +502,9 @@ export default function App() {
               <p className="text-gray-400 text-xs lg:text-sm">© 2025 Black Flame Digital Service Company LLC. Game copyright belongs to third parties.</p>
             </div>
             <div className="flex flex-wrap justify-center gap-3 lg:gap-6">
-              <a href="/privacy" className="text-blue-300 hover:text-blue-100 transition-colors text-xs lg:text-sm touch-target">Privacy Policy</a>
-              <a href="https://gamedistribution.com/" target='_blank' className="text-blue-300 hover:text-blue-100 transition-colors text-xs lg:text-sm touch-target">Partnership</a>
-              <a href="#contact" className="text-blue-300 hover:text-blue-100 transition-colors text-xs lg:text-sm touch-target">Contact Us</a>
+              <Link href="/privacy" className="text-blue-300 hover:text-blue-100 transition-colors text-xs lg:text-sm touch-target">Privacy Policy</Link>
+              <Link href="https://gamedistribution.com/" target='_blank' className="text-blue-300 hover:text-blue-100 transition-colors text-xs lg:text-sm touch-target">Partnership</Link>
+              <Link href="#contact" className="text-blue-300 hover:text-blue-100 transition-colors text-xs lg:text-sm touch-target">Contact Us</Link>
             </div>
           </div>
         </div>
