@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabaseClient';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
 import { Textarea } from '../components/ui/textarea';
@@ -11,12 +12,10 @@ import { Star, Share2, Maximize, MessageCircle, Users, Lightbulb, ExternalLink }
 export default function App() {
   const [isGameLoaded, setIsGameLoaded] = useState(false);
   const [comment, setComment] = useState('');
-  const [comments, setComments] = useState([
-    { id: 1, author: 'Alex', content: 'So thrilling! The night scenery is amazing!', time: '2 hours ago' },
-    { id: 2, author: 'ParkingKing', content: 'Physics engine is very realistic, great crash sounds!', time: '5 hours ago' },
-    { id: 3, author: 'NightOwl', content: 'Neon light effects are perfect, so immersive', time: '1 day ago' }
-  ]);
+  const [comments, setComments] = useState<Array<{ id: string; author: string; content: string; time: string }>>([]);
   const [feedback, setFeedback] = useState('');
+  const [isSending, setIsSending] = useState(false);
+  const [cooldownUntil, setCooldownUntil] = useState<number>(0);
 
   useEffect(() => {
     // 模拟游戏加载
@@ -24,6 +23,44 @@ export default function App() {
       setIsGameLoaded(true);
     }, 2000);
     return () => clearTimeout(timer);
+  }, []);
+
+  const formatRelativeTime = (iso: string): string => {
+    const then = new Date(iso).getTime();
+    const now = Date.now();
+    const diffSec = Math.max(0, Math.floor((now - then) / 1000));
+    if (diffSec < 10) return 'just now';
+    if (diffSec < 60) return `${diffSec}s ago`;
+    const diffMin = Math.floor(diffSec / 60);
+    if (diffMin < 60) return `${diffMin}m ago`;
+    const diffHr = Math.floor(diffMin / 60);
+    if (diffHr < 24) return `${diffHr}h ago`;
+    const diffDay = Math.floor(diffHr / 24);
+    return `${diffDay}d ago`;
+  };
+
+  const fetchComments = async () => {
+    const { data, error } = await supabase
+      .from('game_comment')
+      .select('*')
+      .eq('game_name', 'Parking Fury 3D: Night City')
+      .order('created_at', { ascending: false })
+      .limit(100);
+    if (error) {
+      console.error('Failed to fetch comments:', error);
+      return;
+    }
+    const mapped = (data || []).map((row) => ({
+      id: `db-${String(row.id)}`,
+      author: 'Anonymous Player',
+      content: String(row.content ?? ''),
+      time: formatRelativeTime(String(row.created_at)),
+    }));
+    setComments(mapped);
+  };
+
+  useEffect(() => {
+    fetchComments();
   }, []);
 
   const scrollToIframe = () => {
@@ -56,16 +93,55 @@ export default function App() {
     window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
   };
 
-  const addComment = () => {
-    if (comment.trim()) {
-      const newComment = {
-        id: comments.length + 1,
-        author: 'Anonymous Player',
-        content: comment,
-        time: 'just now'
-      };
-      setComments([newComment, ...comments]);
+  const sanitizeComment = (input: string): string => {
+    // Normalize, remove control chars, strip angle brackets, collapse whitespace, limit length
+    const normalized = input.normalize('NFKC');
+    const withoutControls = normalized.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
+    const withoutAngles = withoutControls.replace(/[<>]/g, '');
+    const collapsed = withoutAngles.replace(/\s+/g, ' ').trim();
+    return collapsed.slice(0, 500);
+  };
+
+  const addComment = async () => {
+    if (!comment.trim()) return;
+    const safe = sanitizeComment(comment);
+    if (!safe) return;
+
+    const now = Date.now();
+    if (now < cooldownUntil || isSending) return;
+    setIsSending(true);
+
+    // Optimistic UI update
+    const optimistic = {
+      id: `temp-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      author: 'Anonymous Player',
+      content: safe,
+      time: 'just now',
+    };
+    setComments([optimistic, ...comments]);
+
+    try {
+      const res = await fetch('/api/comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: safe }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        const msg = data?.error || `HTTP ${res.status}`;
+        console.error('API insert error:', msg);
+        alert(`Failed to save comment: ${msg}`);
+      }
+      // refresh from server to reflect canonical order/timestamps
+      fetchComments();
+    } catch (e) {
+      console.error('Failed to save comment to Supabase:', e);
+      alert('Failed to save comment. Please try again later.');
+    } finally {
       setComment('');
+      setIsSending(false);
+      setCooldownUntil(Date.now() + 4_000); // 10s cooldown
     }
   };
 
@@ -79,8 +155,8 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       {/* SEO Head Optimization */}
-      <title>Parking Fury 3D: Night City - Free Online Parking Game | parkingfury3d.win</title>
-      <meta name="description" content="Drive and park vehicles in the big night city! No download required, challenge Parking Fury 3D's extreme controls now." />
+      <title>Parking Fury 3D: Night City - Free Online Parking Game</title>
+      <meta name="description" content="Drive and park vehicles in the big night city! No download required, challenge Parking Fury 3D&apos;s extreme controls now." />
       
       {/* Header - Mobile Optimized */}
       <header className="bg-gray-900/80 backdrop-blur-sm border-b border-blue-500/30 sticky top-0 z-50">
@@ -95,7 +171,7 @@ export default function App() {
             </h1>
             <nav className="flex space-x-3 lg:space-x-6">
               <a href="#home" className="text-blue-300 hover:text-blue-100 transition-colors text-sm lg:text-base touch-target">Home</a>
-              <a href="#about" className="text-blue-300 hover:text-blue-100 transition-colors text-sm lg:text-base touch-target">Game</a>
+              <a href="#game-iframe" className="text-blue-300 hover:text-blue-100 transition-colors text-sm lg:text-base touch-target">Game</a>
             </nav>
           </div>
         </div>
@@ -118,7 +194,7 @@ export default function App() {
               Parking Fury 3D: Night City Challenge
             </h2>
             <p className="text-lg sm:text-xl lg:text-2xl text-blue-100 mb-6 lg:mb-8 leading-relaxed text-center px-2">
-              Welcome to the adrenaline-filled world of Parking Fury 3D, where you'll be at the wheel of various vehicles navigating the bustling streets of a massive city.
+              Welcome to the adrenaline-filled world of Parking Fury 3D, where you&apos;ll be at the wheel of various vehicles navigating the bustling streets of a massive city.
             </p>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 my-8 lg:my-12">
@@ -232,7 +308,7 @@ export default function App() {
                         🌃 Game Overview
                       </h3>
                       <p className="text-gray-300 text-sm lg:text-base leading-relaxed mb-4">
-                      Welcome to the adrenaline-filled world of Parking Fury 3D, where you'll be at the wheel of various vehicles navigating the bustling streets of a massive city. Whether you're behind the wheel of a taxi or driving an ambulance through traffic to save lives, each mission presents its own challenges and rewards. For those who dare, there is the exciting world of car theft missions. Take on the role of a skilled driver tasked with procuring specific vehicles under the cover of darkness.
+                      Welcome to the adrenaline-filled world of Parking Fury 3D, where you&apos;ll be at the wheel of various vehicles navigating the bustling streets of a massive city. Whether you're behind the wheel of a taxi or driving an ambulance through traffic to save lives, each mission presents its own challenges and rewards. For those who dare, there is the exciting world of car theft missions. Take on the role of a skilled driver tasked with procuring specific vehicles under the cover of darkness.
                       </p>
                     
                     </div>
@@ -352,13 +428,14 @@ export default function App() {
                     />
                     <Button 
                       onClick={addComment}
-                      className="w-full bg-purple-600 hover:bg-purple-700 text-sm lg:text-base py-2 lg:py-3 touch-target"
+                      disabled={isSending || Date.now() < cooldownUntil}
+                      className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm lg:text-base py-2 lg:py-3 touch-target"
                     >
-                      Send
+                      {isSending ? 'Sending...' : (Date.now() < cooldownUntil ? 'Please input...' : 'Send')}
                     </Button>
                   </div>
                   <Separator className="bg-purple-500/30 mb-3 lg:mb-4" />
-                  <div className="space-y-2 lg:space-y-3 max-h-40 lg:max-h-48 overflow-y-auto">
+                  <div className="space-y-2 lg:space-y-3 h-40 lg:h-48 overflow-y-auto pr-2">
                     {comments.map((comment) => (
                       <div key={comment.id} className="text-xs lg:text-sm">
                         <div className="flex justify-between items-start mb-1">
@@ -410,61 +487,22 @@ export default function App() {
                 </div>
               </Card>
 
-              {/* Ad Space */}
-              <Card className="bg-gradient-to-br from-green-800/30 to-blue-800/30 border-green-500/30 backdrop-blur-sm">
-                <div className="p-4 lg:p-6 text-center">
-                  <div className="text-green-400 mb-2 text-lg lg:text-xl">💰</div>
-                  <div className="text-green-400 mb-1 text-sm lg:text-base">Ad Partnership</div>
-                  <p className="text-xs lg:text-sm text-gray-400">Contact us for advertising</p>
-                </div>
-              </Card>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Teaser Section - Mobile Optimized */}
-      <section id="about" className="py-8 lg:py-16 bg-gradient-to-b from-gray-800 to-gray-900">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <Card className="bg-gray-800/50 border-blue-500/30 backdrop-blur-sm">
-            <div className="p-4 lg:p-8">
-              <h3 className="text-lg lg:text-2xl text-blue-200 mb-3 lg:mb-4 flex items-center justify-center gap-2">
-                <Users className="w-5 h-5 lg:w-6 lg:h-6" />
-                More Games Coming Soon!
-              </h3>
-              <p className="text-gray-300 mb-4 lg:mb-6 text-sm lg:text-base">
-                Parking Fury 3D is our debut game. Stay tuned for new action/racing games.
-              </p>
-              <div className="flex flex-col gap-3 lg:gap-4 justify-center mb-4 lg:mb-6">
-                <Input
-                  placeholder="What type of games would you like to play?"
-                  value={feedback}
-                  onChange={(e) => setFeedback(e.target.value)}
-                  className="bg-gray-700/50 border-blue-500/30 text-white placeholder-gray-400 text-sm lg:text-base py-2 lg:py-3"
-                />
-                <Button 
-                  onClick={submitFeedback}
-                  className="bg-blue-600 hover:bg-blue-700 text-sm lg:text-base py-2 lg:py-3 touch-target"
-                >
-                  Submit
-                </Button>
-              </div>
-            
-            </div>
-          </Card>
-        </div>
-      </section>
-
+      
       {/* Footer - Mobile Optimized */}
       <footer className="bg-gray-900 border-t border-blue-500/30 py-6 lg:py-8">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex flex-col gap-4 lg:gap-0 lg:flex-row justify-between items-center text-center">
             <div>
-              <p className="text-gray-400 text-xs lg:text-sm">© 2025 FunPark Games. Game copyright belongs to third parties.</p>
+              <p className="text-gray-400 text-xs lg:text-sm">© 2025 Black Flame Digital Service Company LLC. Game copyright belongs to third parties.</p>
             </div>
             <div className="flex flex-wrap justify-center gap-3 lg:gap-6">
-              <a href="#privacy" className="text-blue-300 hover:text-blue-100 transition-colors text-xs lg:text-sm touch-target">Privacy Policy</a>
-              <a href="#partnership" className="text-blue-300 hover:text-blue-100 transition-colors text-xs lg:text-sm touch-target">Partnership</a>
+              <a href="/privacy" className="text-blue-300 hover:text-blue-100 transition-colors text-xs lg:text-sm touch-target">Privacy Policy</a>
+              <a href="https://gamedistribution.com/" target='_blank' className="text-blue-300 hover:text-blue-100 transition-colors text-xs lg:text-sm touch-target">Partnership</a>
               <a href="#contact" className="text-blue-300 hover:text-blue-100 transition-colors text-xs lg:text-sm touch-target">Contact Us</a>
             </div>
           </div>
