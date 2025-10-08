@@ -270,7 +270,7 @@ export default function App() {
                   )}
                   <iframe
                     id="game-iframe"
-                    src="https://html5.gamedistribution.com/13d99dac275842e1a64a13332962fbd1/?gd_sdk_referrer_url=https://www.parkingfury3d.win"
+                    src="https://html5.gamedistribution.com/13d99dac275842e1a64a13332962fbd1/?gd_sdk_referrer_url=https://parkingfury3d.win"
                     width="100%"
                     height="400"
                     className="border-0 lg:h-[600px]"
