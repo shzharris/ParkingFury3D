@@ -106,7 +106,7 @@ export default function App() {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `linear-gradient(rgba(0, 0, 50, 0.7), rgba(0, 0, 100, 0.8)), url('https://images.unsplash.com/photo-1734576878619-87578fdaefee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHhOZW9uJTIwbGlnaHRzJTIwY2l0eXxlbnwxfHx8fDE3NTk5MjQ0Mzd8MA&ixlib=rb-4.1.0&q=80&w=1080')`
+            backgroundImage: `linear-gradient(rgba(0, 0, 50, 0.7), rgba(0, 0, 100, 0.8)), url('/image3.jpg')`
           }}
         />
         <div className="relative z-10 max-w-4xl mx-auto text-center px-4">
@@ -193,7 +193,7 @@ export default function App() {
                   )}
                   <iframe
                     id="game-iframe"
-                    src="https://www.crazygames.com/embed/parking-fury-3d-night-thief"
+                    src="https://html5.gamedistribution.com/13d99dac275842e1a64a13332962fbd1/?gd_sdk_referrer_url=https://www.parkingfury3d.win"
                     width="100%"
                     height="400"
                     className="border-0 lg:h-[600px]"
@@ -405,9 +405,7 @@ export default function App() {
                   </h3>
                   <div className="space-y-2 text-xs lg:text-sm text-gray-300">
                     <p><strong>Controls:</strong> Use W/A/S/D to drive, spacebar to park</p>
-                    <p><strong>Safety:</strong> Avoid pedestrians and other vehicles</p>
-                    <p><strong>Tips:</strong> Use neon lights as parking guidance</p>
-                    <p><strong>Time:</strong> Manage time wisely, don't rush</p>
+                    <p><strong>Safety:</strong> Press CRTL to enter cars. </p>
                   </div>
                 </div>
               </Card>
