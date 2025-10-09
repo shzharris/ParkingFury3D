@@ -2,15 +2,16 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabaseClient';
-import { Button } from '../components/ui/button';
-import { Card } from '../components/ui/card';
-import { Header } from '../components/common/Header';
-import { Footer } from '../components/common/Footer';
-import { Comments } from '../components/common/Comments';
+import { Button } from '../../components/ui/button';
+import { Card } from '../../components/ui/card';
+import { Header } from '../../components/common/Header';
+import { Footer } from '../../components/common/Footer';
+import { Comments } from '../../components/common/Comments';
 import { Star, Maximize, Users, Lightbulb, ExternalLink } from 'lucide-react';
-import { ShareWithFriends } from '../components/common/ShareWithFriends';
-import { SystemRequirements } from '../components/common/SystemRequirements';
-import { SimilarGames } from '../components/common/SimilarGames';
+import { ShareWithFriends } from '../../components/common/ShareWithFriends';
+import { SystemRequirements } from '../../components/common/SystemRequirements';
+import { SimilarGames } from '../../components/common/SimilarGames';
+
 
 export default function App() {
   const [isGameLoaded, setIsGameLoaded] = useState(false);
@@ -46,7 +47,7 @@ export default function App() {
     const { data, error } = await supabase
       .from('game_comment')
       .select('*')
-      .eq('game_name', 'Parking Fury 3D: Night City')
+      .eq('game_name', 'Parking Fury 3D: Beach City 2')
       .order('created_at', { ascending: false })
       .limit(100);
     if (error) {
@@ -135,12 +136,11 @@ export default function App() {
   };
 
 
-
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       {/* SEO Head Optimization */}
-      <title>Parking Fury 3D: Night City - Free Online Parking Game</title>
-      <meta name="description" content="Drive and park vehicles in the big night city! No download required, challenge Parking Fury 3D&apos;s extreme controls now." />
+      <title>Parking Fury 3D: Beach City 2 - Free Online Parking Game</title>
+      <meta name="description" content="Parking Fury 3D: Beach City 2 takes you to a vibrant town by the beach where you can test your driving and parking skills in a variety of supercars. " />
       
       <Header />
 
@@ -149,7 +149,7 @@ export default function App() {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `linear-gradient(rgba(0, 0, 50, 0.7), rgba(0, 0, 100, 0.8)), url('/image3.jpg')`
+            backgroundImage: `linear-gradient(rgba(0, 0, 50, 0.7), rgba(0, 0, 100, 0.8)), url('/betch-city-2-image4.jpg')`
           }}
         />
         <div className="relative z-10 max-w-4xl mx-auto text-center px-4">
@@ -158,10 +158,10 @@ export default function App() {
                 style={{
                   textShadow: '0 0 20px rgba(59, 130, 246, 0.6), 0 0 40px rgba(59, 130, 246, 0.4)'
                 }}>
-              Parking Fury 3D: Night City Challenge
+              Parking Fury 3D: Beach City 2 Challenge
             </h2>
             <p className="text-lg sm:text-xl lg:text-2xl text-blue-100 mb-6 lg:mb-8 leading-relaxed text-center px-2">
-              Welcome to the adrenaline-filled world of Parking Fury 3D, where you&apos;ll be at the wheel of various vehicles navigating the bustling streets of a massive city.
+            Parking Fury 3D: Beach City 2 takes you to a vibrant town by the beach where you can test your driving and parking skills in a variety of supercars.
             </p>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 my-8 lg:my-12">
@@ -235,8 +235,7 @@ export default function App() {
                   )}
                   <iframe
                     id="game-iframe"
-                    // src="https://html5.gamedistribution.com/13d99dac275842e1a64a13332962fbd1/?gd_sdk_referrer_url=https://www.parkingfury3d.win"
-                    src="https://html5.gamedistribution.com/13d99dac275842e1a64a13332962fbd1/?gd_sdk_referrer_url=https://gamedistribution.com/games/parking-fury-3d:-night-city/"
+                    src="https://html5.gamedistribution.com/6ca9e461efb84bfba46b29379378cf78/?gd_sdk_referrer_url=https://gamedistribution.com/games/parking-fury-3d:-beach-city-2/"
                     width="100%"
                     height="400"
                     className="border-0 lg:h-[600px]"
@@ -265,7 +264,7 @@ export default function App() {
                       style={{
                         textShadow: '0 0 20px rgba(59, 130, 246, 0.6), 0 0 40px rgba(59, 130, 246, 0.4)'
                       }}>
-                    🚗 About Parking Fury 3D: Night City
+                    🚗 About Parking Fury 3D: Beach City 2
                   </h2>
                   
                   <div className="space-y-4 lg:space-y-6">
@@ -275,7 +274,7 @@ export default function App() {
                         🌃 Game Overview
                       </h3>
                       <p className="text-gray-300 text-sm lg:text-base leading-relaxed mb-4">
-                      Welcome to the adrenaline-filled world of Parking Fury 3D, where you&apos;ll be at the wheel of various vehicles navigating the bustling streets of a massive city. Whether you&apos;re behind the wheel of a taxi or driving an ambulance through traffic to save lives, each mission presents its own challenges and rewards. For those who dare, there is the exciting world of car theft missions. Take on the role of a skilled driver tasked with procuring specific vehicles under the cover of darkness.
+                      Parking Fury 3D: Beach City 2 takes you to a vibrant town by the beach where you can test your driving and parking skills in a variety of supercars. Complete challenging parking missions while exploring the scenic coastal streets. You can switch cars on the map, but watch out for the police - get caught stealing a vehicle, and it’s game over! Can you master the art of parking in Beach City without getting busted?
                       </p>
                     
                     </div>
@@ -359,9 +358,11 @@ export default function App() {
 
             {/* Sidebar - Mobile Optimized */}
             <div className="space-y-4 lg:space-y-6">
-              <Comments gameName="Parking Fury 3D: Night City" />
+              <Comments gameName="Parking Fury 3D: Beach City 2" />
               <SimilarGames />
+
               <ShareWithFriends />
+
             </div>
           </div>
         </div>
