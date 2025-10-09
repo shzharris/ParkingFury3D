@@ -274,7 +274,7 @@ export default function App() {
                         🌃 Game Overview
                       </h3>
                       <p className="text-gray-300 text-sm lg:text-base leading-relaxed mb-4">
-                      Get ready to drive through narrow streets, park in difficult places, and steal cars while you avoid the police. There's plenty to do and see in Parking Fury 3D: Beach City
+                      Get ready to drive through narrow streets, park in difficult places, and steal cars while you avoid the police. There&apos;s plenty to do and see in Parking Fury 3D: Beach City
                       </p>
                     
                     </div>
