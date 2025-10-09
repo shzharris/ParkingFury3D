@@ -1,26 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabaseClient";
 
-function sanitize(input: string): string {
+function sanitize(input: string, maxLength = 500): string {
   const normalized = input.normalize("NFKC");
   const noControls = normalized.replace(/[\u0000-\u001F\u007F-\u009F]/g, "");
   const noAngles = noControls.replace(/[<>]/g, "");
   const collapsed = noAngles.replace(/\s+/g, " ").trim();
-  return collapsed.slice(0, 500);
+  return collapsed.slice(0, maxLength);
 }
+
+const DEFAULT_GAME_NAME = "Parking Fury 3D: Night City";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
     const rawContent = String(body?.content ?? "");
-    const content = sanitize(rawContent);
+    const rawGameName = typeof body?.gameName === "string" ? body.gameName : DEFAULT_GAME_NAME;
+
+    const content = sanitize(rawContent, 500);
+    const gameName = sanitize(rawGameName, 120) || DEFAULT_GAME_NAME;
 
     if (!content) {
       return NextResponse.json({ error: "Empty content" }, { status: 400 });
     }
 
     const { error } = await supabase.from("game_comment").insert({
-      game_name: "Parking Fury 3D: Night City",
+      game_name: gameName,
       content,
     });
 

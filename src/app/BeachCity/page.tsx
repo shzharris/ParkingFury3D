@@ -1,24 +1,70 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Button } from '../components/ui/button';
-import { Card } from '../components/ui/card';
-import { Header } from '../components/common/Header';
-import { Footer } from '../components/common/Footer';
-import { Comments } from '../components/common/Comments';
-import { Star, Maximize } from 'lucide-react';
-import { ShareWithFriends } from '../components/common/ShareWithFriends';
-import { SystemRequirements } from '../components/common/SystemRequirements';
-import { SimilarGames } from '../components/common/SimilarGames';
+import { supabase } from '@/lib/supabaseClient';
+import { Button } from '../../components/ui/button';
+import { Card } from '../../components/ui/card';
+import { Header } from '../../components/common/Header';
+import { Footer } from '../../components/common/Footer';
+import { Comments } from '../../components/common/Comments';
+import { Star, Maximize, Users, Lightbulb, ExternalLink } from 'lucide-react';
+import { ShareWithFriends } from '../../components/common/ShareWithFriends';
+import { SystemRequirements } from '../../components/common/SystemRequirements';
+import { SimilarGames } from '../../components/common/SimilarGames';
+
 
 export default function App() {
   const [isGameLoaded, setIsGameLoaded] = useState(false);
+  const [comment, setComment] = useState('');
+  const [comments, setComments] = useState<Array<{ id: string; author: string; content: string; time: string }>>([]);
+  const [feedback, setFeedback] = useState('');
+  const [isSending, setIsSending] = useState(false);
+  const [cooldownUntil, setCooldownUntil] = useState<number>(0);
 
   useEffect(() => {
+    // 模拟游戏加载
     const timer = setTimeout(() => {
       setIsGameLoaded(true);
     }, 2000);
     return () => clearTimeout(timer);
+  }, []);
+
+  const formatRelativeTime = (iso: string): string => {
+    const then = new Date(iso).getTime();
+    const now = Date.now();
+    const diffSec = Math.max(0, Math.floor((now - then) / 1000));
+    if (diffSec < 10) return 'just now';
+    if (diffSec < 60) return `${diffSec}s ago`;
+    const diffMin = Math.floor(diffSec / 60);
+    if (diffMin < 60) return `${diffMin}m ago`;
+    const diffHr = Math.floor(diffMin / 60);
+    if (diffHr < 24) return `${diffHr}h ago`;
+    const diffDay = Math.floor(diffHr / 24);
+    return `${diffDay}d ago`;
+  };
+
+  const fetchComments = async () => {
+    const { data, error } = await supabase
+      .from('game_comment')
+      .select('*')
+      .eq('game_name', 'Parking Fury 3D: Beach City')
+      .order('created_at', { ascending: false })
+      .limit(100);
+    if (error) {
+      console.error('Failed to fetch comments:', error);
+      return;
+    }
+    const mapped = (data || []).map((row) => ({
+      id: `db-${String(row.id)}`,
+      author: 'Anonymous Player',
+      content: String(row.content ?? ''),
+      time: formatRelativeTime(String(row.created_at)),
+    }));
+    setComments(mapped);
+  };
+
+  useEffect(() => {
+    fetchComments();
   }, []);
 
   const scrollToIframe = () => {
@@ -36,11 +82,65 @@ export default function App() {
     }
   };
 
+
+  const sanitizeComment = (input: string): string => {
+    // Normalize, remove control chars, strip angle brackets, collapse whitespace, limit length
+    const normalized = input.normalize('NFKC');
+    const withoutControls = normalized.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
+    const withoutAngles = withoutControls.replace(/[<>]/g, '');
+    const collapsed = withoutAngles.replace(/\s+/g, ' ').trim();
+    return collapsed.slice(0, 500);
+  };
+
+  const addComment = async () => {
+    if (!comment.trim()) return;
+    const safe = sanitizeComment(comment);
+    if (!safe) return;
+
+    const now = Date.now();
+    if (now < cooldownUntil || isSending) return;
+    setIsSending(true);
+
+    // Optimistic UI update
+    const optimistic = {
+      id: `temp-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      author: 'Anonymous Player',
+      content: safe,
+      time: 'just now',
+    };
+    setComments([optimistic, ...comments]);
+
+    try {
+      const res = await fetch('/api/comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: safe }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        const msg = data?.error || `HTTP ${res.status}`;
+        console.error('API insert error:', msg);
+        alert(`Failed to save comment: ${msg}`);
+      }
+      // refresh from server to reflect canonical order/timestamps
+      fetchComments();
+    } catch (e) {
+      console.error('Failed to save comment to Supabase:', e);
+      alert('Failed to save comment. Please try again later.');
+    } finally {
+      setComment('');
+      setIsSending(false);
+      setCooldownUntil(Date.now() + 4_000); // 10s cooldown
+    }
+  };
+
+
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       {/* SEO Head Optimization */}
-      <title>Parking Fury 3D: Night City - Free Online Parking Game</title>
-      <meta name="description" content="Drive and park vehicles in the big night city! No download required, challenge Parking Fury 3D&apos;s extreme controls now." />
+      <title>Parking Fury 3D: Beach City - Free Online Parking Game</title>
+      <meta name="description" content="Get ready to drive through narrow streets, park in difficult places, and steal cars while you avoid the police. There's plenty to do and see in Parking Fury 3D: Beach City" />
       
       <Header />
 
@@ -49,7 +149,7 @@ export default function App() {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `linear-gradient(rgba(0, 0, 50, 0.7), rgba(0, 0, 100, 0.8)), url('/image3.jpg')`
+            backgroundImage: `linear-gradient(rgba(0, 0, 50, 0.7), rgba(0, 0, 100, 0.8)), url('/betch-city-image3.jpg')`
           }}
         />
         <div className="relative z-10 max-w-4xl mx-auto text-center px-4">
@@ -58,10 +158,10 @@ export default function App() {
                 style={{
                   textShadow: '0 0 20px rgba(59, 130, 246, 0.6), 0 0 40px rgba(59, 130, 246, 0.4)'
                 }}>
-              Parking Fury 3D: Night City Challenge
+              Parking Fury 3D: Beach City Challenge
             </h2>
             <p className="text-lg sm:text-xl lg:text-2xl text-blue-100 mb-6 lg:mb-8 leading-relaxed text-center px-2">
-              Welcome to the adrenaline-filled world of Parking Fury 3D, where you&apos;ll be at the wheel of various vehicles navigating the bustling streets of a massive city.
+            Parking Fury 3D: Beach City takes you to a vibrant town by the beach where you can test your driving and parking skills in a variety of supercars.
             </p>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 my-8 lg:my-12">
@@ -135,13 +235,12 @@ export default function App() {
                   )}
                   <iframe
                     id="game-iframe"
-                    // src="https://html5.gamedistribution.com/13d99dac275842e1a64a13332962fbd1/?gd_sdk_referrer_url=https://www.parkingfury3d.win"
-                    src="https://html5.gamedistribution.com/13d99dac275842e1a64a13332962fbd1/?gd_sdk_referrer_url=https://gamedistribution.com/games/parking-fury-3d:-night-city/"
+                    src="https://html5.gamedistribution.com/a0307d115a204901aa768ff1ca4145e6/?gd_sdk_referrer_url=https://gamedistribution.com/games/parking-fury-3d-beach-city/"
                     width="100%"
                     height="400"
                     className="border-0 lg:h-[600px]"
                     loading="lazy"
-                    title="Parking Fury 3D: Night City Game"
+                    title="Parking Fury 3D: Beach City Game"
                   />
                   <div className="absolute top-2 right-2 lg:top-4 lg:right-4">
                     <Button 
@@ -165,7 +264,7 @@ export default function App() {
                       style={{
                         textShadow: '0 0 20px rgba(59, 130, 246, 0.6), 0 0 40px rgba(59, 130, 246, 0.4)'
                       }}>
-                    🚗 About Parking Fury 3D: Night City
+                    🚗 About Parking Fury 3D: Beach City
                   </h2>
                   
                   <div className="space-y-4 lg:space-y-6">
@@ -175,7 +274,7 @@ export default function App() {
                         🌃 Game Overview
                       </h3>
                       <p className="text-gray-300 text-sm lg:text-base leading-relaxed mb-4">
-                      Welcome to the adrenaline-filled world of Parking Fury 3D, where you&apos;ll be at the wheel of various vehicles navigating the bustling streets of a massive city. Whether you&apos;re behind the wheel of a taxi or driving an ambulance through traffic to save lives, each mission presents its own challenges and rewards. For those who dare, there is the exciting world of car theft missions. Take on the role of a skilled driver tasked with procuring specific vehicles under the cover of darkness.
+                      Get ready to drive through narrow streets, park in difficult places, and steal cars while you avoid the police. There's plenty to do and see in Parking Fury 3D: Beach City
                       </p>
                     
                     </div>
@@ -259,9 +358,12 @@ export default function App() {
 
             {/* Sidebar - Mobile Optimized */}
             <div className="space-y-4 lg:space-y-6">
-              <SimilarGames />
-              <Comments gameName="Parking Fury 3D: Night City" />
+            <SimilarGames />
+
+              <Comments gameName="Parking Fury 3D: Beach City" />
+
               <ShareWithFriends />
+
             </div>
           </div>
         </div>

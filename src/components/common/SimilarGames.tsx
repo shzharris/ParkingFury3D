@@ -19,7 +19,17 @@ const games: SimilarGame[] = [
     href: "/BeachCity2",
     image: "/betch-city-2-image4.jpg",
   },
-  
+  {
+    name: "Parking Fury 3D: Beach City",
+    href: "/BeachCity",
+    image: "/betch-city-image3.jpg",
+  },
+  {
+    name: "Parking Fury 3D: Night Thief",
+    href: "/NightThief",
+    image: "/night-thief-image4.jpg",
+  },
+
 ];
 
 export function SimilarGames() {

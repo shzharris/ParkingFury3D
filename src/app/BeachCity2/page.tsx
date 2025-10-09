@@ -240,7 +240,7 @@ export default function App() {
                     height="400"
                     className="border-0 lg:h-[600px]"
                     loading="lazy"
-                    title="Parking Fury 3D: Night City Game"
+                    title="Parking Fury 3D: Beach City 2 Game"
                   />
                   <div className="absolute top-2 right-2 lg:top-4 lg:right-4">
                     <Button 
@@ -358,8 +358,9 @@ export default function App() {
 
             {/* Sidebar - Mobile Optimized */}
             <div className="space-y-4 lg:space-y-6">
+            <SimilarGames />
+
               <Comments gameName="Parking Fury 3D: Beach City 2" />
-              <SimilarGames />
 
               <ShareWithFriends />
 

@@ -8,6 +8,8 @@ import { Separator } from "../ui/separator";
 import { MessageCircle } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 
+const DEFAULT_GAME_NAME = "Parking Fury 3D: Night City";
+
 type CommentItem = { id: string; author: string; content: string; time: string };
 
 function sanitize(input: string): string {
@@ -16,6 +18,13 @@ function sanitize(input: string): string {
   const withoutAngles = withoutControls.replace(/[<>]/g, "");
   const collapsed = withoutAngles.replace(/\s+/g, " ").trim();
   return collapsed.slice(0, 500);
+}
+
+function sanitizeGameName(input: string): string {
+  const normalized = input.normalize("NFKC");
+  const withoutControls = normalized.replace(/[\u0000-\u001F\u007F-\u009F]/g, "");
+  const collapsed = withoutControls.replace(/\s+/g, " ").trim();
+  return (collapsed || DEFAULT_GAME_NAME).slice(0, 120);
 }
 
 function formatRelativeTime(iso: string): string {
@@ -32,17 +41,18 @@ function formatRelativeTime(iso: string): string {
   return `${diffDay}d ago`;
 }
 
-export function Comments({ gameName = "Parking Fury 3D: Night City" }: { gameName?: string }) {
+export function Comments({ gameName = DEFAULT_GAME_NAME }: { gameName?: string }) {
   const [comment, setComment] = React.useState("");
   const [comments, setComments] = React.useState<CommentItem[]>([]);
   const [isSending, setIsSending] = React.useState(false);
   const [cooldownUntil, setCooldownUntil] = React.useState<number>(0);
+  const normalizedGameName = React.useMemo(() => sanitizeGameName(gameName), [gameName]);
 
   const fetchComments = React.useCallback(async () => {
     const { data, error } = await supabase
       .from("game_comment")
       .select("*")
-      .eq("game_name", gameName)
+      .eq("game_name", normalizedGameName)
       .order("created_at", { ascending: false })
       .limit(100);
     if (error) return;
@@ -53,7 +63,7 @@ export function Comments({ gameName = "Parking Fury 3D: Night City" }: { gameNam
       time: formatRelativeTime(String(row.created_at)),
     }));
     setComments(mapped);
-  }, [gameName]);
+  }, [normalizedGameName]);
 
   React.useEffect(() => {
     fetchComments();
@@ -79,7 +89,7 @@ export function Comments({ gameName = "Parking Fury 3D: Night City" }: { gameNam
       const res = await fetch("/api/comments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: safe }),
+        body: JSON.stringify({ content: safe, gameName: normalizedGameName }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
