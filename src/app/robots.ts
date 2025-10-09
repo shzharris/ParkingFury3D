@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://parkingfury3d.win';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.parkingfury3d.win';
 
 export default function robots(): MetadataRoute.Robots {
   return {

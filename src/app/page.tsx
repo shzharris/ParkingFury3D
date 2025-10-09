@@ -7,8 +7,13 @@ import { Card } from '../components/ui/card';
 import { Textarea } from '../components/ui/textarea';
 import { Input } from '../components/ui/input';
 import { Separator } from '../components/ui/separator';
+import { Header } from '../components/common/Header';
+import { Footer } from '../components/common/Footer';
+import { Comments } from '../components/common/Comments';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
-import { Star, Share2, Maximize, MessageCircle, Users, Lightbulb, ExternalLink } from 'lucide-react';
+import { Star, Maximize, Users, Lightbulb, ExternalLink } from 'lucide-react';
+import { ShareWithFriends } from '../components/common/ShareWithFriends';
+import { SystemRequirements } from '../components/common/SystemRequirements';
 
 export default function App() {
   const [isGameLoaded, setIsGameLoaded] = useState(false);
@@ -156,27 +161,10 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       {/* SEO Head Optimization */}
-      <title>Parking Fury 3D - Free Online Parking Game</title>
+      <title>Parking Fury 3D: Night City - Free Online Parking Game</title>
       <meta name="description" content="Drive and park vehicles in the big night city! No download required, challenge Parking Fury 3D&apos;s extreme controls now." />
       
-      {/* Header - Mobile Optimized */}
-      <header className="bg-gray-900/80 backdrop-blur-sm border-b border-blue-500/30 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-3 lg:py-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-lg sm:text-xl lg:text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400 bg-clip-text text-transparent"
-                style={{
-                  textShadow: '0 0 10px rgba(59, 130, 246, 0.5), 0 0 20px rgba(59, 130, 246, 0.3), 0 0 30px rgba(59, 130, 246, 0.1)'
-                }}>
-              <span className="hidden sm:inline">Parking Fury 3D: Night City</span>
-              <span className="sm:hidden">Parking Fury 3D</span>
-            </h1>
-            <nav className="flex space-x-3 lg:space-x-6">
-              <Link href="#home" className="text-blue-300 hover:text-blue-100 transition-colors text-sm lg:text-base touch-target">Home</Link>
-              <Link href="#game-iframe" className="text-blue-300 hover:text-blue-100 transition-colors text-sm lg:text-base touch-target">Game</Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <section id="home" className="relative min-h-screen flex items-center justify-center">
@@ -385,29 +373,7 @@ export default function App() {
                     </div>
 
                     {/* System Requirements - Mobile Friendly */}
-                    <div className="bg-gradient-to-r from-gray-800/50 to-gray-700/50 rounded-lg p-4 lg:p-6 border border-gray-500/20">
-                      <h3 className="text-lg lg:text-xl text-gray-200 mb-3 flex items-center gap-2">
-                        💻 System Requirements
-                      </h3>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                          <h4 className="text-blue-300 font-semibold mb-2">Desktop:</h4>
-                          <ul className="text-gray-300 text-sm space-y-1">
-                            <li>• Modern web browser (Chrome, Firefox, Safari)</li>
-                            <li>• Stable internet connection</li>
-                            <li>• Hardware acceleration enabled</li>
-                          </ul>
-                        </div>
-                        <div>
-                          <h4 className="text-green-300 font-semibold mb-2">Mobile:</h4>
-                          <ul className="text-gray-300 text-sm space-y-1">
-                            <li>• iOS 12+ or Android 8+</li>
-                            <li>• Modern mobile browser</li>
-                            <li>• Touch screen support</li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
+                    <SystemRequirements />
                   </div>
                 </div>
               </Card>
@@ -415,66 +381,9 @@ export default function App() {
 
             {/* Sidebar - Mobile Optimized */}
             <div className="space-y-4 lg:space-y-6">
-              {/* Comments */}
-              <Card className="bg-gray-800/50 border-purple-500/30 backdrop-blur-sm">
-                <div className="p-4 lg:p-6">
-                  <h3 className="flex items-center gap-2 text-purple-200 mb-3 lg:mb-4 text-sm lg:text-base">
-                    <MessageCircle className="w-4 h-4 lg:w-5 lg:h-5" />
-                    Player Comments
-                  </h3>
-                  <div className="space-y-3 lg:space-y-4 mb-3 lg:mb-4">
-                    <Textarea
-                      placeholder="Share your parking skills!"
-                      value={comment}
-                      onChange={(e) => setComment(e.target.value)}
-                      className="bg-gray-700/50 border-purple-500/30 text-white placeholder-gray-400 text-sm lg:text-base min-h-[80px] lg:min-h-[100px]"
-                    />
-                    <Button 
-                      onClick={addComment}
-                      disabled={isSending || Date.now() < cooldownUntil}
-                      className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm lg:text-base py-2 lg:py-3 touch-target"
-                    >
-                      {isSending ? 'Sending...' : (Date.now() < cooldownUntil ? 'Please input...' : 'Send')}
-                    </Button>
-                  </div>
-                  <Separator className="bg-purple-500/30 mb-3 lg:mb-4" />
-                  <div className="space-y-2 lg:space-y-3 h-40 lg:h-48 overflow-y-auto pr-2">
-                    {comments.map((comment) => (
-                      <div key={comment.id} className="text-xs lg:text-sm">
-                        <div className="flex justify-between items-start mb-1">
-                          <span className="text-purple-300 font-medium">{comment.author}</span>
-                          <span className="text-gray-500 text-xs">{comment.time}</span>
-                        </div>
-                        <p className="text-gray-300">{comment.content}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </Card>
+              <Comments gameName="Parking Fury 3D: Night City" />
 
-              {/* Share */}
-              <Card className="bg-gray-800/50 border-cyan-500/30 backdrop-blur-sm">
-                <div className="p-4 lg:p-6">
-                  <h3 className="flex items-center gap-2 text-cyan-200 mb-3 lg:mb-4 text-sm lg:text-base">
-                    <Share2 className="w-4 h-4 lg:w-5 lg:h-5" />
-                    Share with Friends
-                  </h3>
-                  <div className="flex gap-2">
-                    <Button 
-                      onClick={shareTwitter}
-                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-xs lg:text-sm py-2 lg:py-3 touch-target"
-                    >
-                      Twitter
-                    </Button>
-                    <Button 
-                      onClick={shareFacebook}
-                      className="flex-1 bg-blue-800 hover:bg-blue-900 text-xs lg:text-sm py-2 lg:py-3 touch-target"
-                    >
-                      Facebook
-                    </Button>
-                  </div>
-                </div>
-              </Card>
+              <ShareWithFriends />
 
           
 
@@ -484,21 +393,7 @@ export default function App() {
       </section>
 
       
-      {/* Footer - Mobile Optimized */}
-      <footer className="bg-gray-900 border-t border-blue-500/30 py-6 lg:py-8">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex flex-col gap-4 lg:gap-0 lg:flex-row justify-between items-center text-center">
-            <div>
-              <p className="text-gray-400 text-xs lg:text-sm">© 2025 Black Flame Digital Service Company LLC. Game copyright belongs to third parties.</p>
-            </div>
-            <div className="flex flex-wrap justify-center gap-3 lg:gap-6">
-              <Link href="/privacy" className="text-blue-300 hover:text-blue-100 transition-colors text-xs lg:text-sm touch-target">Privacy Policy</Link>
-              <Link href="https://gamedistribution.com/" target='_blank' className="text-blue-300 hover:text-blue-100 transition-colors text-xs lg:text-sm touch-target">Partnership</Link>
-              <Link href="#contact" className="text-blue-300 hover:text-blue-100 transition-colors text-xs lg:text-sm touch-target">Contact Us</Link>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

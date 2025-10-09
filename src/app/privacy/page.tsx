@@ -1,28 +1,10 @@
 import Link from "next/link";
+import { Header } from "@/components/common/Header";
+import { Footer } from "@/components/common/Footer";
 export default function PrivacyPolicyPage() {
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      {/* Header - Mobile Optimized (copied from home) */}
-      <header className="bg-gray-900/80 backdrop-blur-sm border-b border-blue-500/30 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-3 lg:py-4">
-          <div className="flex items-center justify-between">
-            <h1
-              className="text-lg sm:text-xl lg:text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400 bg-clip-text text-transparent"
-              style={{
-                textShadow:
-                  "0 0 10px rgba(59, 130, 246, 0.5), 0 0 20px rgba(59, 130, 246, 0.3), 0 0 30px rgba(59, 130, 246, 0.1)",
-              }}
-            >
-              <span className="hidden sm:inline">Parking Fury 3D</span>
-              <span className="sm:hidden">Parking Fury 3D</span>
-            </h1>
-            <nav className="flex space-x-3 lg:space-x-6">
-              <Link href="/" className="text-blue-300 hover:text-blue-100 transition-colors text-sm lg:text-base touch-target">Home</Link>
-              <Link href="/#game-iframe" className="text-blue-300 hover:text-blue-100 transition-colors text-sm lg:text-base touch-target">Game</Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Privacy Content */}
       <main className="max-w-3xl mx-auto px-4 py-10 text-gray-200">
@@ -84,21 +66,7 @@ export default function PrivacyPolicyPage() {
         </section>
       </main>
 
-      {/* Footer - Mobile Optimized (copied from home) */}
-      <footer className="bg-gray-900 border-t border-blue-500/30 py-6 lg:py-8">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex flex-col gap-4 lg:gap-0 lg:flex-row justify-between items-center text-center">
-            <div>
-              <p className="text-gray-400 text-xs lg:text-sm">© 2025 Black Flame Digital Service Company LLC. Game copyright belongs to third parties.</p>
-            </div>
-            <div className="flex flex-wrap justify-center gap-3 lg:gap-6">
-              <Link href="/privacy" className="text-blue-300 hover:text-blue-100 transition-colors text-xs lg:text-sm touch-target">Privacy Policy</Link>
-              <a href="https://gamedistribution.com/" target='_blank' className="text-blue-300 hover:text-blue-100 transition-colors text-xs lg:text-sm touch-target">Partnership</a>
-              <Link href="#contact" className="text-blue-300 hover:text-blue-100 transition-colors text-xs lg:text-sm touch-target">Contact Us</Link>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
