@@ -156,7 +156,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       {/* SEO Head Optimization */}
-      <title>Parking Fury 3D: Night City - Free Online Parking Game</title>
+      <title>Parking Fury 3D - Free Online Parking Game</title>
       <meta name="description" content="Drive and park vehicles in the big night city! No download required, challenge Parking Fury 3D&apos;s extreme controls now." />
       
       {/* Header - Mobile Optimized */}
@@ -269,7 +269,8 @@ export default function App() {
                   )}
                   <iframe
                     id="game-iframe"
-                    src="https://html5.gamedistribution.com/13d99dac275842e1a64a13332962fbd1/?gd_sdk_referrer_url=https://www.parkingfury3d.win"
+                    // src="https://html5.gamedistribution.com/13d99dac275842e1a64a13332962fbd1/?gd_sdk_referrer_url=https://www.parkingfury3d.win"
+                    src="https://html5.gamedistribution.com/13d99dac275842e1a64a13332962fbd1/?gd_sdk_referrer_url=https://gamedistribution.com/games/parking-fury-3d:-night-city/"
                     width="100%"
                     height="400"
                     className="border-0 lg:h-[600px]"

@@ -13,7 +13,7 @@ export default function PrivacyPolicyPage() {
                   "0 0 10px rgba(59, 130, 246, 0.5), 0 0 20px rgba(59, 130, 246, 0.3), 0 0 30px rgba(59, 130, 246, 0.1)",
               }}
             >
-              <span className="hidden sm:inline">Parking Fury 3D: Night City</span>
+              <span className="hidden sm:inline">Parking Fury 3D</span>
               <span className="sm:hidden">Parking Fury 3D</span>
             </h1>
             <nav className="flex space-x-3 lg:space-x-6">
