@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import Script from "next/script";
 
 const GA_MEASUREMENT_ID = "G-KQ3ZQ21EEV";
+const ADSENSE_CLIENT_ID = "ca-pub-4704956339474632";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
@@ -22,6 +23,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             });
           `}
         </Script>
+        <Script
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
+          strategy="afterInteractive"
+          crossOrigin="anonymous"
+        />
       </head>
       <body>{children}</body>
     </html>
