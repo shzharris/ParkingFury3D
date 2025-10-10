@@ -29,43 +29,6 @@ export default function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  const formatRelativeTime = (iso: string): string => {
-    const then = new Date(iso).getTime();
-    const now = Date.now();
-    const diffSec = Math.max(0, Math.floor((now - then) / 1000));
-    if (diffSec < 10) return 'just now';
-    if (diffSec < 60) return `${diffSec}s ago`;
-    const diffMin = Math.floor(diffSec / 60);
-    if (diffMin < 60) return `${diffMin}m ago`;
-    const diffHr = Math.floor(diffMin / 60);
-    if (diffHr < 24) return `${diffHr}h ago`;
-    const diffDay = Math.floor(diffHr / 24);
-    return `${diffDay}d ago`;
-  };
-
-  const fetchComments = async () => {
-    const { data, error } = await supabase
-      .from('game_comment')
-      .select('*')
-      .eq('game_name', 'Parking Fury 3D: Beach City 2')
-      .order('created_at', { ascending: false })
-      .limit(100);
-    if (error) {
-      console.error('Failed to fetch comments:', error);
-      return;
-    }
-    const mapped = (data || []).map((row) => ({
-      id: `db-${String(row.id)}`,
-      author: 'Anonymous Player',
-      content: String(row.content ?? ''),
-      time: formatRelativeTime(String(row.created_at)),
-    }));
-    setComments(mapped);
-  };
-
-  useEffect(() => {
-    fetchComments();
-  }, []);
 
   const scrollToIframe = () => {
     document.getElementById('game-section')?.scrollIntoView({ behavior: 'smooth' });
@@ -83,57 +46,6 @@ export default function App() {
   };
 
 
-  const sanitizeComment = (input: string): string => {
-    // Normalize, remove control chars, strip angle brackets, collapse whitespace, limit length
-    const normalized = input.normalize('NFKC');
-    const withoutControls = normalized.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
-    const withoutAngles = withoutControls.replace(/[<>]/g, '');
-    const collapsed = withoutAngles.replace(/\s+/g, ' ').trim();
-    return collapsed.slice(0, 500);
-  };
-
-  const addComment = async () => {
-    if (!comment.trim()) return;
-    const safe = sanitizeComment(comment);
-    if (!safe) return;
-
-    const now = Date.now();
-    if (now < cooldownUntil || isSending) return;
-    setIsSending(true);
-
-    // Optimistic UI update
-    const optimistic = {
-      id: `temp-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-      author: 'Anonymous Player',
-      content: safe,
-      time: 'just now',
-    };
-    setComments([optimistic, ...comments]);
-
-    try {
-      const res = await fetch('/api/comments', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: safe }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        const msg = data?.error || `HTTP ${res.status}`;
-        console.error('API insert error:', msg);
-        alert(`Failed to save comment: ${msg}`);
-      }
-      // refresh from server to reflect canonical order/timestamps
-      fetchComments();
-    } catch (e) {
-      console.error('Failed to save comment to Supabase:', e);
-      alert('Failed to save comment. Please try again later.');
-    } finally {
-      setComment('');
-      setIsSending(false);
-      setCooldownUntil(Date.now() + 4_000); // 10s cooldown
-    }
-  };
 
 
   return (
@@ -158,7 +70,7 @@ export default function App() {
                 style={{
                   textShadow: '0 0 20px rgba(59, 130, 246, 0.6), 0 0 40px rgba(59, 130, 246, 0.4)'
                 }}>
-              Parking Fury 3D: Beach City 2 Challenge
+              Parking Fury 3D: Beach City 2
             </h2>
             <p className="text-lg sm:text-xl lg:text-2xl text-blue-100 mb-6 lg:mb-8 leading-relaxed text-center px-2">
             Parking Fury 3D: Beach City 2 takes you to a vibrant town by the beach where you can test your driving and parking skills in a variety of supercars.

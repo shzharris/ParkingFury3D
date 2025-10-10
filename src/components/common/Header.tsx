@@ -28,7 +28,7 @@ export function Header({
             <span className="sm:hidden">{titleShort}</span>
           </h1>
           <nav className="flex space-x-3 lg:space-x-6">
-            <Link href="#home" className="text-blue-300 hover:text-blue-100 transition-colors text-sm lg:text-base touch-target">Home</Link>
+            <Link href="/" className="text-blue-300 hover:text-blue-100 transition-colors text-sm lg:text-base touch-target">Home</Link>
             <Link href={gameAnchor} className="text-blue-300 hover:text-blue-100 transition-colors text-sm lg:text-base touch-target">Game</Link>
           </nav>
         </div>

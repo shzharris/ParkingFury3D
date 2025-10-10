@@ -11,7 +11,7 @@ type SimilarGame = {
 const games: SimilarGame[] = [
   {
     name: "Parking Fury 3D: Night City",
-    href: "/",
+    href: "/NightCity",
     image: "/image3.jpg",
   },
   {
@@ -28,6 +28,11 @@ const games: SimilarGame[] = [
     name: "Parking Fury 3D: Night Thief",
     href: "/NightThief",
     image: "/night-thief-image4.jpg",
+  },
+  {
+    name: "Parking Fury 3D: Bounty Hunter",
+    href: "/BountyHunter",
+    image: "/bounty_hunter.jpg",
   },
 
 ];

@@ -58,7 +58,7 @@ export default function App() {
                 style={{
                   textShadow: '0 0 20px rgba(59, 130, 246, 0.6), 0 0 40px rgba(59, 130, 246, 0.4)'
                 }}>
-              Parking Fury 3D: Night City Challenge
+              Parking Fury 3D: Night City
             </h2>
             <p className="text-lg sm:text-xl lg:text-2xl text-blue-100 mb-6 lg:mb-8 leading-relaxed text-center px-2">
               Welcome to the adrenaline-filled world of Parking Fury 3D, where you&apos;ll be at the wheel of various vehicles navigating the bustling streets of a massive city.
