@@ -2,14 +2,12 @@ import "./globals.css";
 import type { ReactNode } from "react";
 import Script from "next/script";
 
-const GA_MEASUREMENT_ID = "G-KQ3ZQ21EEV";
-const ADSENSE_CLIENT_ID = "ca-pub-4704956339474632";
+const GA_MEASUREMENT_ID = "G-9Z2E7Q8GDH";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <head>
-        <meta name="google-adsense-account" content="ca-pub-4704956339474632"/>
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
           strategy="afterInteractive"
@@ -24,11 +22,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             });
           `}
         </Script>
-        <Script
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
-          strategy="afterInteractive"
-          crossOrigin="anonymous"
-        />
       </head>
       <body>{children}</body>
     </html>
