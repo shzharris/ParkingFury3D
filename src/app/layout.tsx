@@ -10,6 +10,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <head>
         <meta name="google-adsense-account" content="ca-pub-4704956339474632" />
         <Script
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4704956339474632"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+        <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
           strategy="afterInteractive"
         />
