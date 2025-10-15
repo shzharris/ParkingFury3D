@@ -23,9 +23,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             });
           `}
         </Script>
-        <Script async src="https://www.googletagmanager.com/gtag/js?id=AW-17643358883">
-        </Script>
-        <Script>  
+        <Script async src="https://www.googletagmanager.com/gtag/js?id=AW-17643358883" />
+        <Script id="aw-gtag-init" strategy="afterInteractive">
           {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
